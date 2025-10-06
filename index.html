@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pooja Gupta | Web Developer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <!-- NEW: Typed.js for title animation -->
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6366f1',
+                        dark: '#0f172a',
+                        light: '#f8fafc'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .dark .dark\:bg-gradient-dark {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        }
+        .light .light\:bg-gradient-light {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        }
+        .project-card {
+            transition: all 0.3s ease;
+            /* Add an attribute to help with filtering */
+            display: block; 
+        }
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #6366f1;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #6366f1;
+        }
+        /* NEW: Hero background effect (subtle radial gradient) */
+        #home {
+            position: relative;
+            overflow: hidden;
+        }
+        #home::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: -50px;
+            right: -50px;
+            bottom: -50px;
+            background: radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.05) 0%, transparent 50%);
+            z-index: -1;
+        }
+        .dark #home::before {
+            background: radial-gradient(circle at 90% 90%, rgba(99, 102, 241, 0.08) 0%, transparent 50%);
+        }
+        .filter-button.active {
+            background-color: #6366f1;
+            color: white;
+            border-color: #6366f1;
+        }
+        .skill-bar-progress {
+            transition: width 1s ease-out;
+            width: 0%; /* Initial state for animation */
+        }
+        
+        /* NEW: Accordion Styles */
+        .accordion-header {
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .accordion-header:hover {
+            background-color: rgba(99, 102, 241, 0.1); /* primary/10 */
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+        }
+        .accordion-content.expanded {
+            max-height: 500px; /* A value larger than the content */
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+        .accordion-icon {
+            transition: transform 0.3s ease;
+        }
+        .accordion-icon.rotate {
+            transform: rotate(180deg);
+        }
+        
+    </style>
+</head>
+<body class="dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg border-b border-gray-200 dark:border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-primary">Pooja Gupta</span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#home" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Home</a>
+                    <a href="#about" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">About</a>
+                    <a href="#skills" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Skills</a>
+                    <a href="#projects" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Projects</a>
+                    <a href="#contact" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Contact</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="relative inline-block w-10 mr-2 align-middle select-none">
+                        <input type="checkbox" name="toggle" id="toggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"/>
+                        <label for="toggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                    </div>
+                    <span class="text-gray-700 dark:text-gray-300">
+                        <i data-feather="moon" class="hidden dark:block"></i>
+                        <i data-feather="sun" class="dark:hidden"></i>
+                    </span>
+                    <button class="md:hidden text-gray-700 dark:text-gray-300" id="menu-toggle">
+                        <i data-feather="menu"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile menu -->
+        <div class="hidden md:hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#home" class="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Home</a>
+                <a href="#about" class="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">About</a>
+                <a href="#skills" class="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Skills</a>
+                <a href="#projects" class="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Projects</a>
+                <a href="#contact" class="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div data-aos="fade-right">
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">Hi, I'm <span class="text-primary" id="typed-output">Pooja Gupta</span></h1>
+                <h2 class="text-2xl md:text-3xl font-semibold mb-6 text-gray-600 dark:text-gray-400">Web Developer</h2>
+                <p class="text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-lg">I create beautiful, functional websites and web applications with modern technologies.</p>
+                <div class="flex space-x-4">
+                    <a href="#contact" class="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition">Get In Touch</a>
+                    <a href="https://bit.ly/4hVC2ko" download class="px-6 py-3 border border-primary text-primary rounded-lg hover:bg-primary/10 transition">Download Resume</a>
+                </div>
+            </div>
+            <div data-aos="fade-left" class="flex justify-center">
+                <div class="relative w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden border-4 border-primary">
+                    <img src="Pooja image.jpeg" alt="Pooja Gupta" class="w-full h-full object-cover">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto bg-gray-50 dark:bg-gray-800 rounded-xl">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl font-bold mb-4">About Me</h2>
+            <div class="w-20 h-1 bg-primary mx-auto"></div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div data-aos="fade-right">
+                <div class="flex flex-wrap gap-2 mb-6">
+                    <button class="tab-button active px-4 py-2 text-sm rounded-lg border border-transparent font-semibold transition" data-tab-id="summary">Summary</button>
+                    <button class="tab-button px-4 py-2 text-sm rounded-lg border border-transparent font-semibold transition" data-tab-id="my-journey">My Journey</button>
+                </div>
+                <div id="summary" class="tab-content active text-gray-600 dark:text-gray-400">
+                    <p class="mb-4">I am a passionate and dedicated Web Developer with a focus on building engaging and user-friendly digital experiences. I am a recent B.Tech graduate in Information Technology and have a strong foundation in modern frontend technologies.</p>
+                    <p>I thrive on turning complex problems into simple, beautiful, and intuitive designs. I am a lifelong learner, always exploring new frameworks and tools to stay at the forefront of the industry and deliver high-quality, scalable web solutions.</p>
+                </div>
+                <div id="my-journey" class="tab-content text-gray-600 dark:text-gray-400">
+                    <p class="mb-4">My journey into web development began during my college years, where I was captivated by the power of creating interactive applications from scratch. This passion led me to pursue hands-on internships to apply my academic knowledge to real-world projects.</p>
+                    <p>My experience at **Bharat Intern** and **Oasis Infobyte** allowed me to build responsive websites and contribute to client projects. This practical work solidified my skills in **HTML, CSS, and JavaScript** and introduced me to the collaborative nature of the tech industry. I am now eager to apply these skills in a professional setting and continue my growth as a developer.</p>
+                </div>
+            </div>
+            
+            <div data-aos="fade-left" class="flex justify-center">
+                <div class="relative w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden border-4 border-primary">
+                    <img src="Pooja image.jpeg" alt="Pooja Gupta" class="w-full h-full object-cover">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl font-bold mb-4">My Skills</h2>
+            <div class="w-20 h-1 bg-primary mx-auto"></div>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            <div data-aos="zoom-in" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md text-center">
+                <div class="w-16 h-16 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i data-feather="code" class="text-primary w-8 h-8"></i>
+                </div>
+                <h3 class="font-semibold mb-2">HTML5</h3>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 skill-bar-container" data-progress="95">
+                    <div class="bg-primary h-2.5 rounded-full skill-bar-progress"></div>
+                </div>
+            </div>
+            <div data-aos="zoom-in" data-aos-delay="100" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md text-center">
+                <div class="w-16 h-16 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i data-feather="terminal" class="text-primary w-8 h-8"></i>
+                </div>
+                <h3 class="font-semibold mb-2">CSS3</h3>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 skill-bar-container" data-progress="90">
+                    <div class="bg-primary h-2.5 rounded-full skill-bar-progress"></div>
+                </div>
+            </div>
+            <div data-aos="zoom-in" data-aos-delay="200" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md text-center">
+                <div class="w-16 h-16 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i data-feather="code" class="text-primary w-8 h-8"></i>
+                </div>
+                <h3 class="font-semibold mb-2">JavaScript</h3>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 skill-bar-container" data-progress="85">
+                    <div class="bg-primary h-2.5 rounded-full skill-bar-progress"></div>
+                </div>
+            </div>
+            <div data-aos="zoom-in" data-aos-delay="300" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md text-center">
+                <div class="w-16 h-16 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i data-feather="send" class="text-primary w-8 h-8"></i>
+                </div>
+                <h3 class="font-semibold mb-2">React</h3>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 skill-bar-container" data-progress="80">
+                    <div class="bg-primary h-2.5 rounded-full skill-bar-progress"></div>
+                </div>
+            </div>
+            <div data-aos="zoom-in" data-aos-delay="400" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md text-center">
+                <div class="w-16 h-16 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i data-feather="database" class="text-primary w-8 h-8"></i>
+                </div>
+                <h3 class="font-semibold mb-2">Node.js</h3>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 skill-bar-container" data-progress="75">
+                    <div class="bg-primary h-2.5 rounded-full skill-bar-progress"></div>
+                </div>
+            </div>
+            <div data-aos="zoom-in" data-aos-delay="500" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md text-center">
+                <div class="w-16 h-16 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i data-feather="git-branch" class="text-primary w-8 h-8"></i>
+                </div>
+                <h3 class="font-semibold mb-2">Git</h3>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 skill-bar-container" data-progress="85">
+                    <div class="bg-primary h-2.5 rounded-full skill-bar-progress"></div>
+                </div>
+            </div>
+            <div data-aos="zoom-in" data-aos-delay="600" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md text-center">
+                <div class="w-16 h-16 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i data-feather="feather" class="text-primary w-8 h-8"></i>
+                </div>
+                <h3 class="font-semibold mb-2">Devops</h3>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 skill-bar-container" data-progress="70">
+                    <div class="bg-primary h-2.5 rounded-full skill-bar-progress"></div>
+                </div>
+            </div>
+            <div data-aos="zoom-in" data-aos-delay="700" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md text-center">
+                <div class="w-16 h-16 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i data-feather="server" class="text-primary w-8 h-8"></i>
+                </div>
+                <h3 class="font-semibold mb-2">MongoDB</h3>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 skill-bar-container" data-progress="75">
+                    <div class="bg-primary h-2.5 rounded-full skill-bar-progress"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto bg-gray-50 dark:bg-gray-800 rounded-xl">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl font-bold mb-4">My Projects</h2>
+            <div class="w-20 h-1 bg-primary mx-auto"></div>
+        </div>
+        
+        <!-- UPDATED: Project Filter Bar -->
+        <div class="flex flex-wrap justify-center gap-3 mb-12" id="project-filters">
+            <button data-filter="all" class="filter-button px-4 py-2 border border-primary text-primary rounded-full text-sm hover:bg-primary hover:text-white transition active">All</button>
+            <button data-filter="food" class="filter-button px-4 py-2 border border-gray-400 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-full text-sm hover:bg-primary hover:text-white transition">Food</button>
+            <button data-filter="travel" class="filter-button px-4 py-2 border border-gray-400 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-full text-sm hover:bg-primary hover:text-white transition">Travel</button>
+            <button data-filter="travel" class="filter-button px-4 py-2 border border-gray-400 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-full text-sm hover:bg-primary hover:text-white transition">Porter</button>
+        </div>
+        
+        <!-- Project Grid Container with only TWO projects -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="projects-grid">
+            
+            <!-- Project 1: Chef Di Hatti - Food Restaurant Website -->
+            <div data-aos="fade-up" class="project-card bg-white dark:bg-gray-700 rounded-lg overflow-hidden shadow-md" data-tags="html css javascript food">
+                <div class="h-48 overflow-hidden">
+                    <img src="http://static.photos/food/640x360/1" alt="Chef Di Hatti - Food Restaurant Website" class="w-full h-full object-cover">
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold mb-2">Chef Di Hatti - Food Restaurant Website</h3>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4">A fully responsive, modern website for a restaurant, featuring menus, location, and online ordering links.</p>
+                    <div class="flex flex-wrap gap-2">
+                   
+                    </div>
+                    <div class="mt-4 flex space-x-3">
+                        <a href="https://chefdihatti.netlify.app" target="_blank" class="text-sm text-primary hover:underline">Live Demo</a>
+                        <a href="#" class="text-sm text-primary hover:underline">View Code</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Project 2: TravelLoom - Travel Website -->
+            <div data-aos="fade-up" data-aos-delay="100" class="project-card bg-white dark:bg-gray-700 rounded-lg overflow-hidden shadow-md" data-tags="react tailwindcss travel">
+                <div class="h-48 overflow-hidden">
+                    <img src="http://static.photos/travel/640x360/2" alt="TravelLoom - Travel Website" class="w-full h-full object-cover">
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold mb-2">TravelLoom - Travel Website</h3>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4">A beautiful, UI-focused platform for booking travel packages and exploring destinations, built with a component-based approach.</p>
+                    
+                    
+                    <div class="mt-4 flex space-x-3">
+                        <a href="https://travelloom.netlify.app" target="_blank" class="text-sm text-primary hover:underline">Live Demo</a>
+                        <a href="#" class="text-sm text-primary hover:underline">View Code</a>
+                    </div>
+                </div>
+            </div>
+
+             <!-- Project 3: SwiftPort - Porter Website -->
+             <div data-aos="fade-up" class="project-card bg-white dark:bg-gray-700 rounded-lg overflow-hidden shadow-md" data-tags="html css javascript porter">
+                <div class="h-48 overflow-hidden">
+                    <img src="Porter image.png" 
+                         alt="SwiftPort - Porter Website" 
+                         class="w-full h-full object-cover">
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold mb-2">SwiftPort - Porter Website</h3>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4">
+                        Seamless porter bookings, transparent pricing, and real-time tracking for every move — ensuring convenience, reliability, and peace of mind throughout your journey.
+                    </p>
+                    
+                    <div class="mt-4 flex space-x-3">
+                        <a href="https://swiftporter.netlify.app" target="_blank" class="text-sm text-primary hover:underline">Live Demo</a>
+                        <a href="#" class="text-sm text-primary hover:underline">View Code</a>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        <div class="text-center mt-12">
+            <a href="#" class="px-6 py-3 border border-primary text-primary rounded-lg hover:bg-primary/10 transition">View All Projects</a>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl font-bold mb-4">Get In Touch</h2>
+            <div class="w-20 h-1 bg-primary mx-auto"></div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div data-aos="fade-right">
+                <h3 class="text-2xl font-semibold mb-6">Contact Information</h3>
+                <p class="text-gray-600 dark:text-gray-400 mb-8">Feel free to reach out to me for any questions or opportunities. I'll get back to you as soon as possible.</p>
+                <div class="space-y-6">
+                    <div class="flex items-start">
+                        <div class="w-10 h-10 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center mr-4">
+                            <i data-feather="mail" class="text-primary"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-medium">Email</h4>
+                            <p class="text-gray-600 dark:text-gray-400">pooja323gupta@gmail.com</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="w-10 h-10 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center mr-4">
+                            <i data-feather="phone" class="text-primary"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-medium">Phone</h4>
+                            <p class="text-gray-600 dark:text-gray-400">+91 7393805192</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="w-10 h-10 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center mr-4">
+                            <i data-feather="map-pin" class="text-primary"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-medium">Location</h4>
+                            <p class="text-gray-600 dark:text-gray-400">Lucknow, Uttar Pradesh</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-8">
+                    <h4 class="font-medium mb-4">Follow Me</h4>
+                    <div class="flex space-x-4">
+                        <a href="https://github.com/PoojaGupta2003" target="_blank" class="w-10 h-10 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition">
+                            <i data-feather="github"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/pooja-gupta-091144223" target="_blank" class="w-10 h-10 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition">
+                            <i data-feather="linkedin"></i>
+                        </a>
+                        
+                    </div>
+                </div>
+            </div>
+            <div data-aos="fade-left">
+                <form class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+                    <div class="mb-6">
+                        <label for="name" class="block text-gray-700 dark:text-gray-300 mb-2">Your Name</label>
+                        <input type="text" id="name" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-gray-200">
+                    </div>
+                    <div class="mb-6">
+                        <label for="email" class="block text-gray-700 dark:text-gray-300 mb-2">Your Email</label>
+                        <input type="email" id="email" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-gray-200">
+                    </div>
+                    <div class="mb-6">
+                        <label for="subject" class="block text-gray-700 dark:text-gray-300 mb-2">Subject</label>
+                        <input type="text" id="subject" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-gray-200">
+                    </div>
+                    <div class="mb-6">
+                        <label for="message" class="block text-gray-700 dark:text-gray-300 mb-2">Your Message</label>
+                        <textarea id="message" rows="4" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-gray-200"></textarea>
+                    </div>
+                    <button type="submit" class="w-full px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Toggle dark mode (Keep existing logic)
+        const toggle = document.getElementById('toggle');
+        const html = document.documentElement;
+        
+        // Check for saved user preference, if any
+        if (localStorage.getItem('darkMode') === 'true') {
+            html.classList.add('dark');
+            toggle.checked = true;
+        } else if (localStorage.getItem('darkMode') === 'false') {
+            html.classList.remove('dark');
+            toggle.checked = false;
+        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            // Check system preference
+            html.classList.add('dark');
+            toggle.checked = true;
+            localStorage.setItem('darkMode', 'true');
+        }
+        
+        toggle.addEventListener('change', function() {
+            if (this.checked) {
+                html.classList.add('dark');
+                localStorage.setItem('darkMode', 'true');
+            } else {
+                html.classList.remove('dark');
+                localStorage.setItem('darkMode', 'false');
+            }
+        });
+        
+        // Mobile menu toggle (Keep existing logic)
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        menuToggle.addEventListener('click', function() {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // Close mobile menu when clicking on a link (Keep existing logic)
+        const mobileLinks = document.querySelectorAll('#mobile-menu a');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+        
+        // Smooth scrolling for anchor links (Keep existing logic)
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Initialize AOS (Keep existing logic)
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+        
+        // Initialize Feather Icons (Keep existing logic)
+        feather.replace();
+
+        // --- NEW INTERACTIVE FEATURES ---
+
+        // 1. Hero Typing Effect (Typed.js)
+        new Typed('#typed-output', {
+            strings: ["Pooja Gupta", "a Web Developer", "a Frontend Enthusiast", "a Problem Solver"],
+            typeSpeed: 50,
+            backSpeed: 30,
+            loop: true,
+            showCursor: true,
+            cursorChar: '|',
+            backDelay: 1500,
+        });
+
+        // 2. Skills Bar Animation on Scroll (Intersection Observer)
+        const skillBars = document.querySelectorAll('.skill-bar-container');
+        
+        const observerOptions = {
+            root: null, // Use the viewport as the container
+            rootMargin: '0px',
+            threshold: 0.5 // Trigger when 50% of the element is visible
+        };
+        
+        const skillObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && entry.target.dataset.filled !== 'true') {
+                    const progressBar = entry.target.querySelector('.skill-bar-progress');
+                    const progress = entry.target.dataset.progress;
+                    
+                    // Animate the bar
+                    progressBar.style.width = `${progress}%`;
+                    entry.target.dataset.filled = 'true'; // Mark as filled to prevent re-animation on scroll
+                }
+            });
+        }, observerOptions);
+        
+        skillBars.forEach(bar => {
+            skillObserver.observe(bar);
+        });
+
+        // 3. Project Filtering Logic
+        const filterButtons = document.querySelectorAll('.filter-button');
+        const projectsGrid = document.getElementById('projects-grid');
+        const projectCards = document.querySelectorAll('.project-card');
+
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const filter = button.dataset.filter;
+
+                // Update active state for buttons
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                // Filter projects
+                projectCards.forEach(card => {
+                    const tags = card.dataset.tags.split(' ');
+                    
+                    if (filter === 'all' || tags.includes(filter)) {
+                        // Show the card
+                        card.style.display = 'block';
+                        card.style.opacity = 1;
+                        card.style.transform = 'scale(1)';
+                    } else {
+                        // Hide the card with a transition effect
+                        card.style.opacity = 0;
+                        card.style.transform = 'scale(0.9)';
+                        // Wait for the transition to finish before setting display: none
+                        setTimeout(() => {
+                           card.style.display = 'none';
+                        }, 300); // 300ms matches the project-card transition
+                    }
+                });
+            });
+        });
+
+        // 4. "Read More" Button Logic
+        const readMoreBtn = document.getElementById('about-read-more-btn');
+        const readMoreContent = document.getElementById('about-read-more-content');
+
+        readMoreBtn.addEventListener('click', () => {
+            const isExpanded = readMoreContent.style.display === 'block';
+            if (isExpanded) {
+                readMoreContent.style.display = 'none';
+                readMoreBtn.textContent = 'Read More';
+            } else {
+                readMoreContent.style.display = 'block';
+                readMoreBtn.textContent = 'Read Less';
+            }
+        });
+
+        // 5. Experience/Education Accordion Logic
+        const accordionHeaders = document.querySelectorAll('.accordion-header');
+
+        accordionHeaders.forEach(header => {
+            header.addEventListener('click', () => {
+                const content = header.nextElementSibling;
+                const icon = header.querySelector('.accordion-icon');
+
+                // Toggle visibility
+                content.classList.toggle('expanded');
+                icon.classList.toggle('rotate');
+
+                // Close other open accordions
+                accordionHeaders.forEach(otherHeader => {
+                    if (otherHeader !== header) {
+                        otherHeader.nextElementSibling.classList.remove('expanded');
+                        otherHeader.querySelector('.accordion-icon').classList.remove('rotate');
+                    }
+                });
+            });
+        });
+
+    </script>
+</body>
+</html>
